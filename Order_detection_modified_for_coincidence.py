@@ -37,7 +37,7 @@ pop_1 = sim.Population(1, sim.IF_curr_exp(
 
 # Two population that spike at slightly different times
 input_1 = sim.Population(
-    2, sim.SpikeSourcePoisson(rate=50), label="input")
+    2, sim.SpikeSourcePoisson(rate=20), label="input")
 #input_2 = sim.Population(
    # 1, sim.SpikeSourceArray(spike_times=[1, 22, 41, 57, 81]), label="input")
 
@@ -55,7 +55,7 @@ pop_1.record(["spikes", "v"])
 input_1.record("spikes")
 
 # run
-simtime = 1000
+simtime = 2000
 sim.run(simtime)
 
 # get the Data out in PyNN's Neo format
