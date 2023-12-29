@@ -1,9 +1,0 @@
-*** Vertices:
-Vertex pop_1, size: 1, model: AbstractPopulationVertex, max_atoms: 100
-    Outgoing Edge Partitions:
-
-Vertex input, size: 2, model: SpikeSourceArrayVertex, max_atoms: 9223372036854775807
-    Outgoing Edge Partitions:
-    Partition SPIKE:
-        Edge: projection edge 1, From input to pop_1, model: ProjectionApplicationEdge
-
