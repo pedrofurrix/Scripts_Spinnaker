@@ -1,0 +1,9 @@
+*** Vertices:
+Vertex injector, size: 5, model: SpikeInjectorVertex, max_atoms: 9223372036854775807
+    Outgoing Edge Partitions:
+    Partition SPIKE:
+        Edge: projection edge 1, From injector to pop, model: ProjectionApplicationEdge
+
+Vertex pop, size: 5, model: AbstractPopulationVertex, max_atoms: 256
+    Outgoing Edge Partitions:
+

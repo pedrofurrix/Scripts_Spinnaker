@@ -1,0 +1,8 @@
+SpYNNakerNeuronGraphNetworkSpecificationReport skipped as cfg Reports:write_network_graph is False
+Network Specification report took 0:00:00.001331 
+Splitter reset took 0:00:00.000014 
+Spynnaker splitter selector took 0:00:00.002730 
+DelaySupportAdder took 0:00:00.002938 
+Splitter partitioner took 0:00:00.004928 
+Json machine skipped as cfg Reports:write_json_machine is False
+Board chip report exited with ConfigurationException after 0:00:00.006425

@@ -8,8 +8,8 @@ import aedat
 
 def extract_neuronal_events(file_path):
     events = []
-    with aedat.Dataset(file_path) as f:
-        for event in f:
+    f=aedat.Decoder(file_path) 
+    for event in f:
             # Extract relevant information from the AEDAT events
             neuron_id = event.neuron_id
             timestamp = event.timestamp
@@ -19,5 +19,5 @@ def extract_neuronal_events(file_path):
             events.append({'neuron_id': neuron_id, 'timestamp': timestamp, 'polarity': polarity})
             
 
-file_path = '"H:\\NCN\\Scripts_Spinnaker\aedat\1046.aedat"'
+file_path = '1046.aedat'
 neuronal_events = extract_neuronal_events(file_path)
