@@ -10,7 +10,6 @@ import pyNN.utility.plotting as plot
 import matplotlib.pyplot as plt 
 import sys
 import time
-import threading
 from open_ephys.streaming import EventListener
 
 
@@ -20,7 +19,7 @@ live_input = True
 address='127.0.0.1:5557'
 stream = EventListener(address)
 label="sender"
-connection= sim.external_devices.SpynnakerLiveSpikesConnection(send_labels=["sender"], local_port=19995)
+connection= sim.external_devices.SpynnakerLiveSpikesConnection(send_labels=["sender"], receive_labels=["receiver"], local_port=None)
 
 
 # === Simulation Setup ===
@@ -41,11 +40,16 @@ def spike_callback(info):
     print(info)
     connection.send_spike(label,0,send_full_keys=True)
     
-def start(label):
+    
+def ttl_callback(info):
+    if info['line'] == 2 and info['state']:
+        print('Rising event on line 2')
+    
+def start_spikes(label,connection):
     if live_input:
-        stream.start(spike_callback=spike_callback)
+        stream.start(spike_callback=spike_callback,ttl_callback=ttl_callback)
     
-    
+"""  
 def input_thread(label,sender):
     time_between_spikes = 0.1
     quit = 0
@@ -56,17 +60,19 @@ def input_thread(label,sender):
         sender.send_spike(label, 0, send_full_keys=True)
         quit += time_between_spikes
     print("Input Spikes stopped")
+    
+"""  
 
 
 
-connection.add_start_resume_callback(label,start)
+connection.add_start_resume_callback(label,start_spikes)
 
 
 
     
 
 # === External Receiver Setup ===
-sim.external_devices.activate_live_output_for(main_pop, database_notify_port_num=19994)
+sim.external_devices.activate_live_output_for(main_pop, database_notify_port_num=connection.local_port)
 
 def receive_spikes(label, time, neuron_ids):
     with open("output.txt", "a") as f:
@@ -74,14 +80,13 @@ def receive_spikes(label, time, neuron_ids):
         for neuron_id in neuron_ids:
                 print("Received spike at time {} from {} {}".format(time, label, neuron_id))
     sys.stdout = original_stdout
-live_spikes_connection = sim.external_devices.SpynnakerLiveSpikesConnection(receive_labels=["receiver"], local_port=19996)
-live_spikes_connection.add_receive_callback("receiver", receive_spikes)
+connection.add_receive_callback("receiver", receive_spikes)
 
 
 main_pop.record(["spikes"])
 
 # === Start the Simulation ===
-simtime = 50000
+simtime = 5000
 sim.run(simtime)
 
 # === Retrieve the Results (Post Simulation) ===
