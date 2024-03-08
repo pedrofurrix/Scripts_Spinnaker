@@ -72,6 +72,7 @@ connection.add_start_resume_callback(label,start_spikes)
 
 # === External Receiver Setup ===
 sim.external_devices.activate_live_output_for(main_pop, database_notify_port_num=connection.local_port)
+
 '''
 def receive_spikes(label, time, neuron_ids):
     with open("output.txt", "a") as f:
@@ -81,12 +82,19 @@ def receive_spikes(label, time, neuron_ids):
     sys.stdout = original_stdout
 connection.add_receive_callback("receiver", receive_spikes)
 '''
+
 def receive_spikes(label, time, neuron_ids):
         for neuron_id in neuron_ids:
                 print("Received spike at time {} from {} {}".format(time, label, neuron_id))
 
 connection.add_receive_callback("receiver", receive_spikes)
 
+'''
+def stop_receiving():
+    stream.end()
+
+connection.add_pause_stop_callback(label,stop_receiving)
+'''
 
 main_pop.record(["spikes"])
 
@@ -99,11 +107,14 @@ neo = main_pop.get_data(variables=["spikes"])
 spikes = neo.segments[0].spiketrains
 sim.end()
 
+
 # === Plot the Results of the Simulation ===
 plot.Figure(
     plot.Panel(spikes, yticks=True, xticks=True, markersize=5, xlim=(0, simtime)),
-    title="Tutorial External Devices"
+    title="OpenEphys Live Input Test"
 )
 plt.xlabel("Simulation Time [ms]")
 plt.locator_params(axis="y", integer=True, tight=True)
 plt.show()
+
+sys.exit()
