@@ -9,15 +9,14 @@ import pyNN.spiNNaker as sim
 import pyNN.utility.plotting as plot
 import matplotlib.pyplot as plt 
 import sys
-import time
 from open_ephys.streaming import EventListener
 
 
 
 original_stdout = sys.stdout
 live_input = True
-address='127.0.0.1:5557'
-stream = EventListener(address)
+#address='127.0.0.1:5557'
+stream = EventListener()
 label="sender"
 connection= sim.external_devices.SpynnakerLiveSpikesConnection(send_labels=["sender"], receive_labels=["receiver"], local_port=None)
 
@@ -73,13 +72,19 @@ connection.add_start_resume_callback(label,start_spikes)
 
 # === External Receiver Setup ===
 sim.external_devices.activate_live_output_for(main_pop, database_notify_port_num=connection.local_port)
-
+'''
 def receive_spikes(label, time, neuron_ids):
     with open("output.txt", "a") as f:
         sys.stdout = f
         for neuron_id in neuron_ids:
                 print("Received spike at time {} from {} {}".format(time, label, neuron_id))
     sys.stdout = original_stdout
+connection.add_receive_callback("receiver", receive_spikes)
+'''
+def receive_spikes(label, time, neuron_ids):
+        for neuron_id in neuron_ids:
+                print("Received spike at time {} from {} {}".format(time, label, neuron_id))
+
 connection.add_receive_callback("receiver", receive_spikes)
 
 
