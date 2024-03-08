@@ -6,7 +6,11 @@ This is a temporary script file.
 """
 
 from open_ephys.streaming import EventListener
+import time
+
+
 stream = EventListener()
+
 
 def ttl_callback(info):
     if info['line'] == 2 and info['state']:
@@ -19,7 +23,16 @@ def spike_callback(info):
 
 spike_callback.counter=0
   
-
+start_time = time.time()
 stream.start(ttl_callback=ttl_callback, spike_callback=spike_callback)
 
+
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+
+
 print(spike_callback.counter)
+print("Elapsed time: ", elapsed_time) 
+spikes_ms=spike_callback.counter/(elapsed_time*1000)
+print("Spikes/ms=",spikes_ms)
